@@ -1,6 +1,9 @@
 .calendar {
     margin-bottom: 30px;
-    width: 714px;
+    width: 574px;
+    min-height: 552;
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: start;
 }

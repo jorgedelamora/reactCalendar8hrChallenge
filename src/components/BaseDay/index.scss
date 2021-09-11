@@ -1,6 +1,6 @@
 .square {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     background-color:white;
     border: 1px solid gray;
     p {
@@ -11,7 +11,7 @@
 }
 
 .weekdays {
-    width: 102px;
+    width: 82px;
     height: 60px;
     background: none;
     display: flex;
@@ -22,8 +22,8 @@
 }
 
 .noValue {
-    width: 102px;
-    height: 102px;
+    width: 82px;
+    height: 82px;
     visibility: hidden;
 }
 
