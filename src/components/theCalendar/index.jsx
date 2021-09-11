@@ -1,6 +1,7 @@
 import './index.scss';
 import BaseDay from '../../components/BaseDay';
-import { useState, useEffect } from 'react';
+import Navbar from '../../components/TheNavbar';
+import { useState, useEffect, useRef } from 'react';
 
 export default function TheCalendar(props) {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -11,28 +12,58 @@ export default function TheCalendar(props) {
 
     function getMonthStart(month, year) {
         let day = new Date(year, month, 1).getDay();
-        console.log(day);
-        if(day === 0){
-            console.log('isSunday');
+        if (day === 0) {
             day = 7;
         }
         day--;
-        console.log('day before return', day);
         return day;
     }
-    
-    function getDaysInMonth (month, year) {
+
+    function getDaysInMonth(month, year) {
         return new Date(year, month, 0).getDate();
     }
 
+    function checkToday() {
+        let today = new Date();
+        const todayInCalendar = today.getDate();
+        const todaySelected = document.querySelector(`#day${todayInCalendar}`);
+        if(!todaySelected){
+            return;
+        }
+        if(todaySelected){
+            todaySelected.style.backgroundColor = "white";
+            todaySelected.style.color = "black";
+        }
+        if ((selectedDate.getFullYear() === today.getFullYear()) &&
+        (selectedDate.getMonth() === today.getMonth())) {
+            console.log('inside if statement');
+
+            todaySelected.style.backgroundColor = "green";
+            todaySelected.style.color = "white";
+        }
+    }
+
+    function switchMonth(direction){
+        let newYear = selectedDate.getFullYear();
+        let newMonth = selectedDate.getMonth() + direction;
+        if(newMonth > 11){
+            newMonth = 0;
+            newYear ++;
+        }else if(newMonth < 0){
+            newMonth = 11;
+            newYear --;
+        }
+        const newDate = new Date(newYear, newMonth);
+        setSelectedDate(newDate);
+    }
 
 
     useEffect(() => {
         const month = [];
-        let uniqueKey = 0;
+        let uniqueKey = 100;
         for (let i = 1; i <= daysInMonth; i++) {
             if (monthStart !== 0) {
-                month.push('no value' + uniqueKey);
+                month.push(uniqueKey);
                 monthStart--;
                 uniqueKey++;
                 i = 0;
@@ -43,8 +74,20 @@ export default function TheCalendar(props) {
         setCurrentMonth(month);
     }, [selectedDate]);
 
+
+    const isFirstRun = useRef(true);
+
+    useEffect(() => {
+        if(isFirstRun.current){
+            isFirstRun.current = false;
+            return;
+        }
+        checkToday();
+    }, [currentMonth]);
+
     return (
-        <>
+        <>  
+            <Navbar date={selectedDate} switchMonth={switchMonth}></Navbar>
             <div className="calendar">
                 {
                     week.map((day) => {
@@ -53,7 +96,7 @@ export default function TheCalendar(props) {
                 }
                 {
                     currentMonth.map((day) => {
-                        return <BaseDay className="square" key={day}>{day}</BaseDay>;
+                        return <BaseDay id={"day" + day} className={day >= 100 ? "noValue" : "square"} key={day}>{day}</BaseDay>;
                     })
                 }
             </div>
